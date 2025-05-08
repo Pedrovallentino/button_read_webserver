@@ -1,3 +1,24 @@
+## 📌 Visão Geral — Servidor Web na Placa BitDogLab com Leitura de Botões e Temperatura
+Este projeto utiliza a placa BitDogLab, baseada no microcontrolador RP2040, para criar um servidor web embarcado com conectividade Wi-Fi. Ele integra leitura de sensores, interface com botões físicos e comunicação em rede, tornando-se um exemplo prático de aplicação em sistemas embarcados com IoT.
+
+## 🖥️ Interface no navegador
+<img src=https://github.com/user-attachments/assets/5c0ed283-541d-4da3-9fdb-60e5846fb1c8>
+
+## 🛠️ Requisitos de Hardware
+- **GPIOs (Pinos de Entrada/Saída):**
+  
+   - Botões: Dois botões conectados aos GPIOs da placa (BTA e BTB) são utilizados para capturar o estado (pressionado ou não) dos botões.
+
+- **ADC (Conversor Analógico-Digital):**
+  
+  - Sensor de Temperatura Interno: Utiliza o ADC da placa para ler a temperatura interna do chip. O valor obtido é processado para calcular a temperatura ambiente.
+
+- **Wi-Fi (CyW43):**
+  
+  - Módulo Wi-Fi Integrado: A placa BitDogLab, com suporte ao chip CyW43, é configurada para se conectar a uma rede Wi-Fi. O Wi-Fi é utilizado para comunicação em rede, permitindo ao dispositivo funcionar como um servidor TCP.
+
+
+
 ## 🧩 1. Inclusão de bibliotecas e definições
 
 **Essas bibliotecas controlam GPIO, ADC, Wi-Fi, e protocolo TCP/IP:**
