@@ -1,6 +1,6 @@
 ## 🧩 1. Inclusão de bibliotecas e definições
 
-Essas bibliotecas controlam GPIO, ADC, Wi-Fi, e protocolo TCP/IP:
+**Essas bibliotecas controlam GPIO, ADC, Wi-Fi, e protocolo TCP/IP:**
 ```c
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
@@ -13,7 +13,7 @@ Essas bibliotecas controlam GPIO, ADC, Wi-Fi, e protocolo TCP/IP:
 #include "lwip/netif.h"
 ```
 
-Definições da rede e dos pinos dos botões:
+**Definições da rede e dos pinos dos botões:**
 ```c
 #define WIFI_SSID "REDEWIFI"
 #define WIFI_PASSWORD "SENHADAREDE"
@@ -24,7 +24,7 @@ Definições da rede e dos pinos dos botões:
 ## 📶 2. Conexão ao Wi-Fi
 
 
-Inicializa a UART e configura os GPIOs como entradas com pull-up:
+**Inicializa a UART e configura os GPIOs como entradas com pull-up:**
 ```c
 stdio_init_all();
 gpio_init(BTA); gpio_set_dir(BTA, GPIO_IN); gpio_pull_up(BTA);
@@ -48,7 +48,7 @@ while (cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_W
 }
 ```
 
-Após conectar, imprime o IP:
+**Após conectar, imprime o IP:**
 ```c
 if (netif_default) {
     printf("IP: %s\n", ipaddr_ntoa(&netif_default->ip_addr));
@@ -58,7 +58,7 @@ if (netif_default) {
 ## 🌐 3. Criação do servidor TCP
 
 
-Cria um servidor escutando na porta 80:
+**Cria um servidor escutando na porta 80:**
 ```c
 struct tcp_pcb *server = tcp_new();
 if (!server) {
@@ -79,12 +79,12 @@ printf("Servidor ouvindo na porta 80\n");
 ## 🔁 4. Tratamento de requisição HTTP
 
 
-Quando o navegador acessa o IP da placa, essa função é chamada:
+**Quando o navegador acessa o IP da placa, essa função é chamada:**
 
 ```c
 static err_t tcp_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) {
 ```
-Verifica se o cliente desconectou:
+**Verifica se o cliente desconectou:**
 
 ```c
 if (!p) {
@@ -93,7 +93,7 @@ if (!p) {
     return ERR_OK;
 }
 ```
-Copia os dados recebidos (como a string "GET /"):
+**Copia os dados recebidos (como a string "GET /"):**
 
 ```c
 char *request = (char *)malloc(p->len + 1);
@@ -105,7 +105,7 @@ printf("Request: %s\n", request);
 ## 🌡️ 5. Leitura da temperatura interna
 
 
-Seleciona o sensor de temperatura (canal 4) e lê o ADC:
+**Seleciona o sensor de temperatura (canal 4) e lê o ADC:**
 
 ```c
 adc_select_input(4);
@@ -117,7 +117,7 @@ float temperature = 27.0f - ((raw_value * conversion_factor) - 0.706f) / 0.00172
 ## 🟢🔴 6. Leitura dos botões
 
 
-Estado dos botões (pressionado = 0):
+**Estado dos botões (pressionado = 0):**
 
 ```c
 int button_a = gpio_get(BTA) == 0;
@@ -127,7 +127,7 @@ int button_b = gpio_get(BTB) == 0;
 🧾 7. Geração da página HTML
 
 
-Cria uma resposta HTML com as cores dos botões e a temperatura:
+**Cria uma resposta HTML com as cores dos botões e a temperatura:**
 
 ```c
 char html[1024];
@@ -163,7 +163,7 @@ snprintf(html, sizeof(html),
 ## 📤 8. Envio da resposta ao navegador
 
 
-Envia a página gerada de volta ao cliente:
+**Envia a página gerada de volta ao cliente:**
 
 ```c
 tcp_write(tpcb, html, strlen(html), TCP_WRITE_FLAG_COPY);
@@ -174,3 +174,29 @@ pbuf_free(p);
 
 ## 🔄 9. Loop principal
 
+
+**Mantém a execução do servidor atualizando os eventos do Wi-Fi:**
+
+```c
+while (true) {
+    cyw43_arch_poll();
+
+
+(...)
+}
+
+```
+
+**Loop infinito para manter o servidor ativo.**
+
+**cyw43_arch_poll() atualiza a pilha de rede e trata eventos de Wi-Fi e TCP.**
+
+- **Inicia UART e GPIOs dos botões.**
+
+- **Inicializa o Wi-Fi e conecta à rede.**
+
+- **Cria um servidor HTTP na porta 80.**
+
+- **Ativa o sensor de temperatura.**
+
+- **Entra num loop infinito para manter o sistema ativo e funcional.**
